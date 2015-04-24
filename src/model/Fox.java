@@ -5,26 +5,27 @@ public class Fox extends Animal {
     public static int ReproductionRate = 3;
 
     public Fox() {
-        super(2 * Math.random() * GainFromFood + 10);
+        super(2 * Math.random() * GainFromFood);
     }
 
-    public Fox(Fox fox) {
+    protected Fox(Fox fox) {
         super(fox);
     }
 
     @Override
     public void feed(Food food) {
-        Hare hare = food.get(Hare.class);
-        if (hare == null) return;
-        hare.die();
-        energy += GainFromFood;
+        eat(food.get(Hare.class));
     }
 
     @Override
     public Animal reproduce() {
-        if (Math.random() * 100 < ReproductionRate)
-            return new Fox(this);
-        else return null;
+        return canReproduce(ReproductionRate) ? new Fox(this) : null;
+    }
+
+    private void eat(Hare hare) {
+        if (hare == null) return;
+        hare.die();
+        energy += GainFromFood;
     }
 
 }

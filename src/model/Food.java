@@ -1,21 +1,19 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Food {
 
-    private List<Object> objects = new ArrayList<>();
+    private final List<Object> objects;
 
-    public Food(Grass grass, Animal[] animals) {
-        objects.add(grass);
-        for (Animal animal : animals) objects.add(animal);
+    public Food(List<Object> objects) {
+        this.objects = objects;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(Class<T> grassClass) {
+    public <T> T get(Class<T> foodClass) {
         for (Object object : objects) {
-            if (object.getClass() == grassClass) return (T) object;
+            if (object.getClass() == foodClass) return (T) object;
         }
         return null;
     }

@@ -1,6 +1,6 @@
 package model;
 
-public class Grass extends Entity {
+public class Grass  {
     public static int MaxRegrowthTime = 17;
     private int regrowthTime;
     private boolean isGreen;
@@ -14,12 +14,14 @@ public class Grass extends Entity {
         return isGreen;
     }
 
-    @Override
-    public void move() {
-        if (isGreen) return;
-        if (--regrowthTime > 0) return;
+    public void step() {
+        if (isGreen || isGrowing()) return;
         isGreen = true;
         regrowthTime = MaxRegrowthTime;
+    }
+
+    private boolean isGrowing() {
+        return --regrowthTime > 0;
     }
 
     public void eaten() {

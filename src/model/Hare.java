@@ -14,14 +14,18 @@ public class Hare extends Animal {
 
     @Override
     public void feed(Food food) {
-        Grass grass = food.get(Grass.class);
+        eat(food.get(Grass.class));
+    }
+
+    @Override
+    public Animal reproduce() {
+        return canReproduce(ReproductionRate) ? new Hare(this) : null;
+    }
+
+    private void eat(Grass grass) {
         if (!grass.isGreen()) return;
         grass.eaten();
         energy += GainFromFood;
     }
 
-    @Override
-    public Animal reproduce() {
-        return Math.random() * 100 < ReproductionRate ? new Hare(this) : null;
-    }
 }

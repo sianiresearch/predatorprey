@@ -12,6 +12,7 @@ public class Simulation {
 
     private static int InitialHares = 146;
     private static int InitialFoxes = 106;
+    private int time = 0;
 
     public Simulation() {
         for (int i = 0; i < World.Size; i++)
@@ -20,69 +21,9 @@ public class Simulation {
         for (int i = 0; i < InitialFoxes; i++) add(new Fox());
     }
 
-    private void add(Animal animal) {
-        if (animal == null) return;
-        animals.add(animal);
+    public int time() {
+        return time;
     }
-
-    public void step() {
-        stepGrass();
-        stepAnimals();
-    }
-
-    private void stepAnimals() {
-        removeDeadAnimals();
-        moveAnimals();
-        reproduceAnimals();
-        feedAnimals();
-    }
-
-    private void reproduceAnimals() {
-        for (Animal animal : animals())
-            add(animal.reproduce());
-    }
-
-    private Animal[] animals() {
-        return animals.toArray(new Animal[animals.size()]);
-    }
-
-    private void removeDeadAnimals() {
-        Iterator<Animal> iterator = animals.iterator();
-        while (iterator.hasNext()) {
-            Animal animal = iterator.next();
-            if (animal.isDead())
-                iterator.remove();
-        }
-    }
-
-    private void feedAnimals() {
-        for (Animal animal : animals) {
-            animal.feed(food(animal.x(),animal.y()));
-        }
-    }
-
-    private Food food(int x, int y) {
-        return new Food(grass[x][y], animalsIn(x,y));
-    }
-
-    private Animal[] animalsIn(int x, int y) {
-        List<Animal> animals = new ArrayList<Animal>();
-        for (Animal animal : this.animals) {
-            if (animal.isIn(x,y)) animals.add(animal);
-        }
-        return animals.toArray(new Animal[animals.size()]);
-    }
-
-    private void moveAnimals() {
-        for (Animal animal : animals)
-            animal.move();
-    }
-
-    private void stepGrass() {
-        for (Grass[] row : grass)
-            for (Grass grass : row) grass.move();
-    }
-
 
     public int grass() {
         int count = 0;
@@ -100,9 +41,72 @@ public class Simulation {
         return count(Fox.class);
     }
 
+    public void step() {
+        stepTime();
+        stepGrass();
+        stepAnimals();
+    }
+
+    private void stepTime() {
+        time++;
+    }
+
+    private void add(Animal animal) {
+        if (animal == null) return;
+        animals.add(animal);
+    }
+
+    private void stepGrass() {
+        for (Grass[] row : grass)
+            for (Grass grass : row) grass.step();
+    }
+
+    private void stepAnimals() {
+        moveAnimals();
+        reproduceAnimals();
+        feedAnimals();
+        removeDeadAnimals();
+    }
+
+    private void moveAnimals() {
+        for (Animal animal : animals)
+            animal.move();
+    }
+
+    private void reproduceAnimals() {
+        for (Animal animal : animals())
+            add(animal.reproduce());
+    }
+
+    private void feedAnimals() {
+        for (Animal animal : animals)
+            animal.feed(foodIn(animal.x(), animal.y()));
+    }
+
+    private void removeDeadAnimals() {
+        Iterator<Animal> iterator = animals.iterator();
+        while (iterator.hasNext()) {
+            Animal animal = iterator.next();
+            if (animal.isDead()) iterator.remove();
+        }
+    }
+
+    private Food foodIn(int x, int y) {
+        List<Object> objects = new ArrayList<>();
+        objects.add(grass[x][y]);
+        for (Animal animal : animals)
+            if (animal.isIn(x, y)) objects.add(animal);
+        return new Food(objects);
+    }
+
+    private Animal[] animals() {
+        return animals.toArray(new Animal[animals.size()]);
+    }
+
     private int count(Class class_) {
         int count = 0;
-        for (Animal animal : animals) if (animal.getClass().equals(class_)) count++;
+        for (Animal animal : animals)
+            if (animal.getClass().equals(class_)) count++;
         return count;
     }
 }

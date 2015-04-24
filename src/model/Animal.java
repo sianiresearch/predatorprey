@@ -1,22 +1,23 @@
 package model;
 
-public abstract class Animal extends Entity {
-    protected Point point;
-    protected double angle;
+public abstract class Animal  {
     protected double energy;
+    protected Vector vector;
 
     protected Animal(double energy) {
         this.energy = energy;
-        this.point = Point.random();
+        this.vector = Vector.random();
     }
 
     protected Animal(Animal animal) {
+        this.energy = shareEnergy(animal);
+        this.vector = new Vector(animal.vector);
+        this.vector.forward();
+    }
+
+    private double shareEnergy(Animal animal) {
         animal.energy = animal.energy / 2.0;
-        this.energy = animal.energy;
-        this.angle = Math.random() * 360;
-        this.point = new Point(animal.point);
-        this.point.forward(angle);
-        this.point.forward(angle);
+        return animal.energy;
     }
 
     public void die() {
@@ -28,58 +29,63 @@ public abstract class Animal extends Entity {
     }
 
     public int x() {
-        return (int) point.x;
+        return (int) vector.x;
     }
 
     public int y() {
-        return (int) point.y;
+        return (int) vector.y;
     }
 
     public boolean isIn(int x, int y) {
         return x == x() && y == y();
     }
 
-    @Override
     public void move() {
-        angle += reorient();
-        point.forward(angle);
+        vector.forward();
         energy--;
-        if (energy < 0)
-            die();
-    }
-
-    private double reorient() {
-        return Math.random() * 50 - Math.random() * 50;
     }
 
     public abstract void feed(Food food);
 
     public abstract Animal reproduce();
 
-    private static class Point {
+    protected boolean canReproduce(int reproductionRate) {
+        return Math.random() * 100 < reproductionRate;
+    }
+
+
+    private static class Vector {
+        double angle;
         double x,y;
 
-        Point(double x, double y) {
+        Vector(double angle, double x, double y) {
+            this.angle = angle;
             this.x = x;
             this.y = y;
         }
 
-        public Point(Point point) {
-            this.x = point.x;
-            this.y = point.y;
+        Vector(Vector vector) {
+            this.angle = vector.angle;
+            this.x = vector.x;
+            this.y = vector.y;
         }
 
-        void forward(double angle) {
+        void forward() {
+            this.angle = reorient();
             this.x = bound(x + Math.cos(angle));
             this.y = bound(y + Math.sin(angle));
+        }
+
+        private double reorient() {
+            return Math.random() * 50 - Math.random() * 50;
         }
 
         private double bound(double value) {
             return (value + World.Size) % World.Size;
         }
 
-        static Point random() {
-            return new Point(Math.random()* World.Size, Math.random()* World.Size);
+        static Vector random() {
+            return new Vector(Math.random() * 360, Math.random()* World.Size, Math.random()* World.Size);
         }
     }
 
