@@ -47,6 +47,14 @@ public class Simulation {
         stepAnimals();
     }
 
+    public void kill(Class class_) {
+        for (int i = 0; i < animals.size(); i++) {
+            if (animals.get(i).getClass() != class_) continue;
+            animals.remove(i);
+            break;
+        }
+    }
+
     private void stepTime() {
         time++;
     }

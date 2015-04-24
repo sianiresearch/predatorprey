@@ -1,6 +1,8 @@
 package simulation;
 
+import model.Fox;
 import model.Grass;
+import model.Hare;
 
 import java.io.*;
 import java.util.Date;
@@ -30,6 +32,14 @@ public class Main {
         while (index++ <= 5000) {
             write(simulation);
             simulation.step();
+
+            if (simulation.foxes() > simulation.hares())
+                for (int i = 0; i < simulation.foxes() / 100; i++)
+                    simulation.kill(Fox.class);
+            else
+                if (simulation.hares() > 200)
+                    for (int i = 0; i < simulation.hares() / 100; i++)
+                        simulation.kill(Hare.class);
         }
         close();
 
@@ -55,7 +65,7 @@ public class Main {
 
     private static BufferedWriter createWriter() throws IOException {
         return new BufferedWriter(new FileWriter(mkdir(filename())));
-        //return null;
+//        return null;
     }
 
     private static String mkdir(String filename) {
