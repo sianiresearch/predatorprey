@@ -65,7 +65,7 @@ public abstract class Animal  {
         }
 
         Vector(Vector vector) {
-            this.angle = vector.angle;
+            this.angle = vector.angle + reorient();
             this.x = vector.x;
             this.y = vector.y;
         }
