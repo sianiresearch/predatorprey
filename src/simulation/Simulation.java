@@ -10,8 +10,8 @@ public class Simulation {
     private Grass[][] grass = new Grass[World.Size][World.Size];
     private List<Animal> animals = new ArrayList<>();
 
-    private static int InitialHares = 100;
-    private static int InitialFoxes = 68;
+    private static int InitialHares = 146;
+    private static int InitialFoxes = 106;
 
     public Simulation() {
         for (int i = 0; i < World.Size; i++)
