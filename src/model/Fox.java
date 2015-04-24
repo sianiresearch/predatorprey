@@ -1,11 +1,11 @@
 package model;
 
 public class Fox extends Animal {
-    private static final int gainFromFood = 20;
-    private static final int reproductionRate = 3;
+    public static int GainFromFood = 20;
+    public static int ReproductionRate = 3;
 
     public Fox() {
-        super(2 * Math.random() * gainFromFood + 10);
+        super(2 * Math.random() * GainFromFood + 10);
     }
 
     public Fox(Fox fox) {
@@ -17,12 +17,12 @@ public class Fox extends Animal {
         Hare hare = food.get(Hare.class);
         if (hare == null) return;
         hare.die();
-        energy += gainFromFood;
+        energy += GainFromFood;
     }
 
     @Override
     public Animal reproduce() {
-        if (Math.random() * 100 < reproductionRate)
+        if (Math.random() * 100 < ReproductionRate)
             return new Fox(this);
         else return null;
     }

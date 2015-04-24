@@ -1,7 +1,7 @@
 package model;
 
 public class Grass extends Entity {
-    private static final int MaxRegrowthTime = 17;
+    public static int MaxRegrowthTime = 17;
     private int regrowthTime;
     private boolean isGreen;
 
