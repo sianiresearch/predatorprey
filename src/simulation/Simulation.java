@@ -7,16 +7,34 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Simulation {
-    private Grass[][] grass = new Grass[World.Size][World.Size];
-    private List<Animal> animals = new ArrayList<>();
+    private final Grass[][] grass;
+    private final List<Animal> animals = new ArrayList<>();
 
-    private static int InitialHares = 146;
-    private static int InitialFoxes = 106;
+    public static int InitialHares = 146;
+    public static int InitialFoxes = 106;
     private int time = 0;
 
     public Simulation() {
+        grass = new Grass[World.Size][World.Size];
+        init();
+    }
+
+    public Simulation(Simulation simulation) {
+        grass = simulation.grass.clone();
+        animals.addAll(simulation.animals);
+    }
+
+    private void init() {
+        initGrass();
+        initAnimals();
+    }
+
+    private void initGrass() {
         for (int i = 0; i < World.Size; i++)
             for (int j = 0; j < World.Size; j++) grass[i][j] = new Grass();
+    }
+
+    private void initAnimals() {
         for (int i = 0; i < InitialHares; i++) add(new Hare());
         for (int i = 0; i < InitialFoxes; i++) add(new Fox());
     }

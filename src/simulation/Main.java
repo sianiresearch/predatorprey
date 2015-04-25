@@ -27,19 +27,12 @@ public class Main {
             write(simulation);
             simulation.step();
         }
-        //La hierba crece más rápido
+        //Aparece una nueva especie de hierba que crece más rapido
+        //Hay que matar al 10% de los animales
+        //¿Donde está el horizonte de sucesos?
         Grass.MaxRegrowthTime = 5;
-        while (index++ <= 5000) {
-            write(simulation);
-            simulation.step();
-
-            if (simulation.foxes() > simulation.hares())
-                for (int i = 0; i < simulation.foxes() / 100; i++)
-                    simulation.kill(Fox.class);
-            else
-                if (simulation.hares() > 200)
-                    for (int i = 0; i < simulation.hares() / 100; i++)
-                        simulation.kill(Hare.class);
+        for (int i = 0; i < 100; i++) {
+            new Thread(new Analysis(simulation, i*10)).start();
         }
         close();
 
@@ -64,8 +57,8 @@ public class Main {
     }
 
     private static BufferedWriter createWriter() throws IOException {
-        return new BufferedWriter(new FileWriter(mkdir(filename())));
-//        return null;
+//        return new BufferedWriter(new FileWriter(mkdir(filename())));
+        return null;
     }
 
     private static String mkdir(String filename) {
