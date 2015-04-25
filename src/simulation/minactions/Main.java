@@ -1,8 +1,9 @@
-package simulation;
+package simulation.minactions;
 
 import model.Fox;
 import model.Grass;
 import model.Hare;
+import simulation.Simulation;
 
 import java.io.*;
 import java.util.Date;
@@ -28,12 +29,12 @@ public class Main {
             simulation.step();
         }
         //Aparece una nueva especie de hierba que crece más rapido
-        //Hay que matar al 10% de los animales
-        //¿Donde está el horizonte de sucesos?
+        //¿Cual es el número mínimo de acciones para evitar caer en una inestabilidad?
         Grass.MaxRegrowthTime = 5;
-        for (int i = 0; i < 100; i++) {
-            new Thread(new Analysis(simulation, i*10)).start();
-        }
+        int[] deaths = new int []{1, 2, 3, 4, 5};
+//        new Thread(new Analysis(simulation, 2, Hare.class)).start();
+//        new Thread(new Analysis(simulation, 1, Fox.class)).start();
+        new Thread(new Analysis(simulation, 1, Hare.class, Fox.class)).start();
         close();
 
     }

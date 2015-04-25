@@ -1,7 +1,8 @@
-package simulation;
+package simulation.eventhorizon;
 
 import model.Fox;
 import model.Hare;
+import simulation.Simulation;
 
 public class Analysis implements Runnable {
     private final Simulation simulation;
