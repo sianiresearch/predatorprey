@@ -1,11 +1,13 @@
 package model;
 
+import java.util.Random;
+
 public class Hare extends Animal {
-    public static int GainFromFood = 4;
+    public static int EnergyAsFood = 20;
     public static int ReproductionRate = 4;
 
     public Hare() {
-        super(2 * Math.random() * GainFromFood);
+        super(2 * new Random().nextDouble() * Grass.EnergyAsFood);
     }
 
     protected Hare(Hare hare) {
@@ -25,7 +27,7 @@ public class Hare extends Animal {
     private void eat(Grass grass) {
         if (!grass.isGreen()) return;
         grass.eaten();
-        energy += GainFromFood;
+        energy += Grass.EnergyAsFood;
     }
 
 }

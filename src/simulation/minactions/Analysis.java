@@ -1,43 +1,46 @@
 package simulation.minactions;
 
-import model.Animal;
 import model.Fox;
+import model.Grass;
 import model.Hare;
 import simulation.Simulation;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.Callable;
 
-public class Analysis implements Runnable {
-    private final Simulation simulation;
-    private final int percentage;
-    private final List<Class<? extends Animal>> animals;
+public class Analysis implements Callable<Result> {
+    private final double haresPercentage;
+    private final double foxesPercentage;
 
-    public Analysis(Simulation simulation, double percentage, Class<? extends Animal>... animals) {
-        this.simulation = new Simulation(simulation);
-        this.percentage = (int) percentage;
-        this.animals = Arrays.asList(animals);
+    public Analysis(double haresPercentage, double foxesPercentage) {
+        this.haresPercentage = haresPercentage;
+        this.foxesPercentage = foxesPercentage;
     }
 
     @Override
-    public void run() {
+    public Result call() throws Exception {
+        Simulation simulation = new Simulation();
         int index = 0;
-        while (index++ <= 2000) {
+        while (index++ <= 1000) simulation.step();
+        //New kind of grass appears that grows faster
+        //What is the minimum actions to keep the stability?
+        Grass.MaxRegrowthTime = 5;
+        while (index++ <= 3000) {
             simulation.step();
-            killExcessPopulation();
+            killExcessPopulation(simulation);
         }
-        String classes = "";
-        for (Class<? extends Animal> animal : animals) classes += animal.getName() + " ";
-        System.out.println(classes + percentage + "\t" + simulation.grass() + "\t" + simulation.hares() + "\t" + simulation.foxes());
+        return new Result(haresPercentage + " - " + foxesPercentage,
+                simulation.grass() * Grass.EnergyAsFood,
+                simulation.hares() * Hare.EnergyAsFood,
+                simulation.foxes() * Fox.EnergyAsFood);
     }
 
-    private void killExcessPopulation() {
-        if(animals.contains(Fox.class))
-            for (int i = 0; i < simulation.foxes() * percentage / 100; i++)
-                simulation.kill(Fox.class);
-        if(animals.contains(Hare.class))
-            for (int i = 0; i < simulation.hares() * percentage / 100; i++)
-                simulation.kill(Hare.class);
+    private void killExcessPopulation(Simulation simulation) {
+        int haresToKill = (int) (simulation.hares() * haresPercentage / 100);
+        for (int j = 0; j < haresToKill; j++)
+                simulation.killHare();
+        int foxesToKill = (int) (simulation.foxes() * foxesPercentage / 100);
+        for (int j = 0; j < foxesToKill; j++)
+                simulation.killFox();
     }
 
 }

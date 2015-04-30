@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 public abstract class Animal  {
     protected double energy;
     protected Vector vector;
@@ -50,7 +52,7 @@ public abstract class Animal  {
     public abstract Animal reproduce();
 
     protected boolean canReproduce(int reproductionRate) {
-        return Math.random() * 100 < reproductionRate;
+        return new Random().nextDouble() * 100 < reproductionRate;
     }
 
 
@@ -77,7 +79,7 @@ public abstract class Animal  {
         }
 
         private double reorient() {
-            return Math.random() * 50 - Math.random() * 50;
+            return new Random().nextDouble() * 50 - new Random().nextDouble() * 50;
         }
 
         private double bound(double value) {
@@ -85,7 +87,7 @@ public abstract class Animal  {
         }
 
         static Vector random() {
-            return new Vector(Math.random() * 360, Math.random()* World.Size, Math.random()* World.Size);
+            return new Vector(new Random().nextDouble() * 360, new Random().nextDouble() * World.Size, new Random().nextDouble() * World.Size);
         }
     }
 

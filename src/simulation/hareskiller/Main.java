@@ -1,4 +1,4 @@
-package simulation.minactions;
+package simulation.hareskiller;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,7 +12,7 @@ public class Main {
 
     FinishedMap map = new FinishedMap();
     private ExecutorService executorService = Executors.newFixedThreadPool(16);
-    List<Future<Result>> futures = new ArrayList<>();
+    List<Future<Boolean>> futures = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         new Main().execute();
@@ -20,41 +20,20 @@ public class Main {
 
     private void execute() throws Exception {
         submitAllAnalysis();
-        processResults();
         map.print();
         executorService.shutdown();
     }
 
     private void submitAllAnalysis() {
-        for (int hares = 0; hares <= 500; hares += 50)
-            for (int foxes = 0; foxes <= 500; foxes += 50)
-                for (int repetition = 0; repetition < 1; repetition++)
-                    futures.add(executorService.submit(new Analysis(100 / 100.0, 100 / 100.0)));
-    }
-
-    private void processResults() throws Exception {
-        while (!futures.isEmpty()) {
-            List<Future> toRemove = new ArrayList<>();
-            futures.stream().filter(Future::isDone).forEach(f -> {
-                try {
-                    process(f.get());
-                    toRemove.add(f);
-                } catch (Exception ignored) {
-                }
-            });
-            toRemove.forEach(futures::remove);
-            System.out.println(futures.size());
-            Thread.sleep(5000);
-        }
-    }
-
-    private void process(Result result) {
-        System.out.println(result.getType() + "\t" + result.getGrassBiomass() + "\t" + result.getHaresBiomass() + "\t" + result.getFoxesBiomass());
-        map.put(result.getType(), isOk(result));
+        for (int eventHorizon = 0; eventHorizon <= 0; eventHorizon+=10)
+            for (int hares = 100; hares <= 100; hares += 100)
+                for (int foxes = 100; foxes <= 100; foxes += 100)
+                    for (int repetition = 0; repetition < 1; repetition++)
+                        futures.add(executorService.submit(new Analysis()));
     }
 
     private Boolean isOk(Result result) {
-        return result.getFoxesBiomass() > 0 && result.getGrassBiomass() > 0 && result.getHaresBiomass() > 0;
+        return result.after().foxesBiomass() > 0 && result.after().grassBiomass() > 0 && result.after().haresBiomass() > 0;
     }
 
     class FinishedMap {

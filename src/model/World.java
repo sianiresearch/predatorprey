@@ -1,6 +1,6 @@
 package model;
 
 public class World {
-    public static final int Size = 51;
+    public static final int Size = 150;
 
 }
