@@ -3,15 +3,18 @@ package model;
 import java.util.Random;
 
 public abstract class Animal  {
+    protected final World world;
     protected double energy;
     protected Vector vector;
 
-    protected Animal(double energy) {
+    protected Animal(World world, double energy) {
+        this.world = world;
         this.energy = energy;
-        this.vector = Vector.random();
+        this.vector = new Vector();
     }
 
-    protected Animal(Animal animal) {
+    protected Animal(World world, Animal animal) {
+        this.world = world;
         this.energy = shareEnergy(animal);
         this.vector = new Vector(animal.vector);
         this.vector.forward();
@@ -56,9 +59,13 @@ public abstract class Animal  {
     }
 
 
-    private static class Vector {
+    private class Vector {
         double angle;
         double x,y;
+
+        public Vector() {
+            this(new Random().nextDouble() * 360, new Random().nextDouble() * world.Size, new Random().nextDouble() * world.Size);
+        }
 
         Vector(double angle, double x, double y) {
             this.angle = angle;
@@ -83,11 +90,7 @@ public abstract class Animal  {
         }
 
         private double bound(double value) {
-            return (value + World.Size) % World.Size;
-        }
-
-        static Vector random() {
-            return new Vector(new Random().nextDouble() * 360, new Random().nextDouble() * World.Size, new Random().nextDouble() * World.Size);
+            return (value + world.Size) % world.Size;
         }
     }
 

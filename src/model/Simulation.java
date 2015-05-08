@@ -1,21 +1,24 @@
-package simulation;
-
-import model.*;
+package model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class Simulation {
+
+    private final World world;
     private final Grass[][] grass;
-    private final List<Hare> hares = new ArrayList<>();
-    private final List<Fox> foxes = new ArrayList<>();
+    private final List<Hare> hares;
+    private final List<Fox> foxes;
 
     public static int InitialHares = 2000;
     public static int InitialFoxes = 800;
 
     public Simulation() {
-        grass = new Grass[World.Size][World.Size];
+        world = new World();
+        grass = new Grass[world.Size][world.Size];
+        hares = new ArrayList<>();
+        foxes = new ArrayList<>();
         init();
     }
 
@@ -25,13 +28,13 @@ public class Simulation {
     }
 
     private void initGrass() {
-        for (int i = 0; i < World.Size; i++)
-            for (int j = 0; j < World.Size; j++) grass[i][j] = new Grass();
+        for (int i = 0; i < world.Size; i++)
+            for (int j = 0; j < world.Size; j++) grass[i][j] = new Grass(world);
     }
 
     private void initAnimals() {
-        for (int i = 0; i < InitialHares; i++) add(new Hare());
-        for (int i = 0; i < InitialFoxes; i++) add(new Fox());
+        for (int i = 0; i < InitialHares; i++) add(new Hare(world));
+        for (int i = 0; i < InitialFoxes; i++) add(new Fox(world));
     }
 
     public int grass() {
@@ -53,14 +56,6 @@ public class Simulation {
     public void step() {
         stepGrass();
         stepAnimals();
-    }
-
-    public void killFox() {
-        foxes.remove(0);
-    }
-
-    public void killHare() {
-        hares.remove(0);
     }
 
     private void add(Animal animal) {
@@ -124,7 +119,13 @@ public class Simulation {
         return new Food(objects);
     }
 
-    public void removeGrass(int x, int y) {
-        grass[x][y].eaten();
+    public boolean growGrass(int x, int y) {
+        if (grass[x][y].isGreen()) return false;
+        grass[x][y].grow();
+        return true;
+    }
+
+    public World world() {
+        return world;
     }
 }

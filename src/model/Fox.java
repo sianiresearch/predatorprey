@@ -1,15 +1,14 @@
 package model;
 
 public class Fox extends Animal {
-    public static int EnergyAsFood = 20;
     public static int ReproductionRate = 3;
 
-    public Fox() {
-        super(2 * Math.random() * Hare.EnergyAsFood);
+    public Fox(World world) {
+        super(world, 2 * Math.random() * Hare.EnergyAsFood);
     }
 
-    protected Fox(Fox fox) {
-        super(fox);
+    public Fox(World world, Fox fox) {
+        super(world, fox);
     }
 
     @Override
@@ -19,7 +18,7 @@ public class Fox extends Animal {
 
     @Override
     public Animal reproduce() {
-        return canReproduce(ReproductionRate) ? new Fox(this) : null;
+        return canReproduce(ReproductionRate) ? new Fox(this.world, this) : null;
     }
 
     private void eat(Hare hare) {

@@ -1,6 +1,6 @@
 package model;
 
-public class World {
-    public static final int Size = 150;
-
+public class World{
+    public int Size = 150;
+    public int MaxRegrowthTime = 17;
 }
